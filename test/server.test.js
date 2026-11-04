@@ -1,0 +1,28 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { makeServer } from '../src/server.js';
+test('HTTP boundary, exact-action approval, evidence export and persistence', async t => {
+  const dir=mkdtempSync(join(tmpdir(),'mandate-test-')),file=join(dir,'state.json');
+  const {server}=makeServer({dataFile:file}); await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  t.after(()=>{server.closeAllConnections();server.close();rmSync(dir,{recursive:true,force:true});});
+  const base=`http://127.0.0.1:${server.address().port}`;
+  const state=await (await fetch(base+'/api/state')).json(),r=state.requests.find(r=>r.kind==='treasury');
+  const post=(op,body={},extra={})=>fetch(`${base}/api/requests/${r.id}/${op}`,{method:'POST',headers:{'Content-Type':'application/json','X-Mandate-Token':state.csrfToken,...extra},body:JSON.stringify(body)});
+  assert.equal((await post('attempt',{}, {'X-Mandate-Token':'wrong'})).status,403);
+  assert.equal((await post('attempt',{}, {Origin:'https://attacker.example'})).status,403);
+  assert.equal((await post('approve',{actor:'treasury-agent-01'})).status,403);
+  assert.equal((await (await post('attempt')).json()).execution,null);
+  assert.equal((await post('remediate')).status,200);
+  assert.equal((await post('approve',{actor:'demo-treasury-approver'})).status,200);
+  assert.ok((await (await post('attempt')).json()).execution);
+  const exportResponse=await fetch(`${base}/api/requests/${r.id}/evidence`);
+  assert.match(exportResponse.headers.get('content-disposition'),/attachment/);
+  assert.equal((await exportResponse.json()).chainVerified,true);
+  const restored=makeServer({dataFile:file});assert.ok(restored.engine.get(r.id).execution);restored.server.close();
+  const page=await fetch(base);assert.match(await page.text(),/Mandate/);assert.match(page.headers.get('content-security-policy'),/frame-ancestors 'none'/);
+  assert.equal((await fetch(base+'/missing')).status,404);
+  assert.equal((await post('attempt',null)).status,400);
+});

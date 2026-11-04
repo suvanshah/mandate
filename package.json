@@ -1,0 +1,14 @@
+{
+  "name": "mandate-agent-gate",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The authorisation layer for AI agents: treasury and trading simulation with policy checks and evidence.",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test",
+    "check": "node --check src/server.js && node --check src/engine.js && node --check public/app.js"
+  }
+}

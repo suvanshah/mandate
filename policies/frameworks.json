@@ -1,0 +1,31 @@
+{
+  "version": "mandate-demo/0.2-draft",
+  "status": "Proposed supporting mappings; not a compliance assessment",
+  "csf": {
+    "name": "NIST CSF 2.0",
+    "source": "https://csrc.nist.gov/Projects/cybersecurity-framework/filters",
+    "mappings": {
+      "scope": {"reference":"PR.AA-05","title":"Policy-based authorisation","rationale":"Restricted capabilities support least privilege."},
+      "approval": {"reference":"PR.AA-05","title":"Separation of duties","rationale":"An independent approver authorises the exact action."},
+      "limits": {"reference":"PR.AA-05","title":"Bounded authority","rationale":"Action limits constrain the authority granted to the agent."}
+    }
+  },
+  "ai": {
+    "name": "NIST AI RMF 1.0",
+    "source": "https://airc.nist.gov/airmf-resources/playbook/govern/",
+    "mappings": {
+      "scope": {"reference":"GOVERN 1.4","title":"Transparent policies and controls","rationale":"Versioned rules and decision evidence support inspectable risk controls."},
+      "approval": {"reference":"GOVERN 2.1","title":"Documented responsibilities","rationale":"A named policy owner and approver provide evidence of assigned responsibility."},
+      "limits": {"reference":"GOVERN 1.3","title":"Risk tolerance informs controls","rationale":"Company thresholds implement part of the organisation’s chosen risk tolerance."}
+    }
+  },
+  "iso": {
+    "name": "ISO/IEC 42001:2023",
+    "source": "https://www.iso.org/standard/42001",
+    "mappings": {
+      "scope": {"reference":"Thematic only","title":"AI risk treatment","rationale":"Operational evidence for a chosen treatment. Clause mapping requires review against the standard."},
+      "approval": {"reference":"Thematic only","title":"AI governance and accountability","rationale":"Operational approval evidence. Clause mapping requires review against the standard."},
+      "limits": {"reference":"Thematic only","title":"AI risk treatment","rationale":"Company-defined action constraints. Clause mapping requires review against the standard."}
+    }
+  }
+}

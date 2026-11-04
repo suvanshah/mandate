@@ -1,0 +1,22 @@
+{
+  "treasury": {
+    "id": "treasury-payments", "version": "1.3", "owner": "Treasury operations",
+    "agentId": "treasury-agent-01", "name": "Treasury agent", "adapter": "mock-bank",
+    "action": "transfer.create", "currency": "GBP",
+    "approvalAbove": "25000.00", "maxAmount": "100000.00",
+    "allowedResources": ["beneficiary-demo-8832"],
+    "allow": ["balance.read", "transfer.propose"],
+    "guarded": ["transfer.create"], "deny": ["beneficiary.create"],
+    "defaultParameters": {"amount":"75000.00","currency":"GBP","source":"acct-demo-2041","destination":"beneficiary-demo-8832"}
+  },
+  "binance": {
+    "id": "spot-trading", "version": "2.1", "owner": "Trading operations",
+    "agentId": "binance-agent-01", "name": "Binance trading agent", "adapter": "mock-binance-spot",
+    "action": "order.create", "currency": "USDT",
+    "approvalAbove": "10000.00", "maxAmount": "20000.00", "dailyLimit": "50000.00", "baselineDailyUsed": "30000.00",
+    "allowedResources": ["BTCUSDT", "ETHUSDT"],
+    "allow": ["balance.read", "order.propose"],
+    "guarded": ["order.create"], "deny": ["withdrawal.create", "margin.borrow"],
+    "defaultParameters": {"symbol":"BTCUSDT","side":"BUY","type":"LIMIT","quantity":"0.15","limitPrice":"100000.00","quoteAsset":"USDT"}
+  }
+}
